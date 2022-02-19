@@ -5,6 +5,9 @@ from brownie import (
     interface,
     Contract,
     LinkToken,
+    MockDAI,
+    MockWETH,
+    DappToken,
     VRFCoordinatorMock,
 )
 from web3 import Web3
@@ -38,6 +41,8 @@ def get_account(index=None, id=None):
 contract_to_mock = {
     "vrf_coordinator": VRFCoordinatorMock,
     "link_token": LinkToken,
+    "weth_token": MockWETH,
+    "dai_token": MockDAI,
 }
 
 
@@ -64,6 +69,9 @@ def deploy_mocks(decimals=DECIMALS, initial_value=INITIAL_VALUE):
 
     link_token = LinkToken.deploy({"from": account})
     vrf_coordinator = VRFCoordinatorMock.deploy(link_token.address, {"from": account})
+    dai_token = MockDAI.deploy({"from": account})
+    weth_token = MockWETH.deploy({"from": account})
+
     print("Deployed mocks!")
 
 
