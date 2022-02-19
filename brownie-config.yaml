@@ -15,6 +15,8 @@ networks:
     verify: False
   rinkeby:
     verify: True
+    weth_token: 0xc778417E063141139Fce010982780140Aa0cD5Ab
+    dai_token: 0xc7AD46e0b8a400Bb3C915120d284AafbA8fc4735
   kovan:
     verify: True
   mainnet-fork:
