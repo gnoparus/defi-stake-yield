@@ -8,6 +8,7 @@ from brownie import (
     MockDAI,
     MockWETH,
     DappToken,
+    MockOracle,
     VRFCoordinatorMock,
     MockV3Aggregator,
 )
@@ -51,6 +52,7 @@ contract_to_mock = {
     "link_token": LinkToken,
     "weth_token": MockWETH,
     "fau_token": MockDAI,
+    "oracle": MockOracle,
     "dai_usd_price_feed": MockV3Aggregator,
     "eth_usd_price_feed": MockV3Aggregator,
     "dapp_usd_price_feed": MockV3Aggregator,
@@ -60,7 +62,7 @@ contract_to_mock = {
 def get_contract(contract_name):
     contract_type = contract_to_mock[contract_name]
 
-    if network.show_active() in LOCAL_BLOCKCHAIN_ENVIRONMENTS:
+    if network.show_active() in NON_FORKED_LOCAL_BLOCKCHAIN_ENVIRONMENTS:
         if len(contract_type) <= 0:
             deploy_mocks()
         # MockV3Aggregator[-1 ] , VRFCoordinatorMock , LinkToken
@@ -86,6 +88,9 @@ def deploy_mocks(decimals=DECIMALS, initial_value=INITIAL_VALUE):
     print(f"Deployed MockDAI to {dai_token.address}")
     weth_token = MockWETH.deploy({"from": account})
     print(f"Deployed MockWETH to {weth_token.address}")
+
+    oracle = MockOracle.deploy(link_token.address, {"from": account})
+    print(f"Deployed MockOracle to {oracle.address}")
 
     eth_usd_pricefeed = MockV3Aggregator.deploy(8, 32000 * 10**10, {"from": account})
     print(f"Deployed MockV3Aggregator eth_usd_pricefeed to {eth_usd_pricefeed.address}")
