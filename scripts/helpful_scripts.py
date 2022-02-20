@@ -55,7 +55,6 @@ contract_to_mock = {
     "oracle": MockOracle,
     "dai_usd_price_feed": MockV3Aggregator,
     "eth_usd_price_feed": MockV3Aggregator,
-    "dapp_usd_price_feed": MockV3Aggregator,
 }
 
 
@@ -96,12 +95,8 @@ def deploy_mocks(decimals=DECIMALS, initial_value=INITIAL_VALUE):
     print(f"Deployed MockV3Aggregator eth_usd_pricefeed to {eth_usd_pricefeed.address}")
     dai_usd_pricefeed = MockV3Aggregator.deploy(8, 1 * 10**10, {"from": account})
     print(f"Deployed MockV3Aggregator dai_usd_pricefeed to {dai_usd_pricefeed.address}")
-    dapp_usd_pricefeed = MockV3Aggregator.deploy(8, 1 * 10**10, {"from": account})
-    print(
-        f"Deployed MockV3Aggregator dapp_usd_pricefeed to {dapp_usd_pricefeed.address}"
-    )
 
-    print("Deployed mocks!")
+    print("Deployed all mocks already!")
 
 
 def fund_with_link(
