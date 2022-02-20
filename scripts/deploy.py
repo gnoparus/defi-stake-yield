@@ -19,19 +19,19 @@ def deploy_dapp_token():
     return dapp_token
 
 
-def deploy_token_farm(_dapp_token):
+def deploy_token_farm_and_dapp_token():
     account = get_account()
-    dapp_token = _dapp_token
+    dapp_token = deploy_dapp_token()
     token_farm = TokenFarm.deploy(
-        _dapp_token,
+        dapp_token,
         {"from": account},
         publish_source=config["networks"][network.show_active()]["verify"],
     )
 
     ### Transfer most of token to token_farm
-    tx = _dapp_token.transfer(
+    tx = dapp_token.transfer(
         token_farm.address,
-        _dapp_token.totalSupply() - KEPT_BALANCE,
+        dapp_token.totalSupply() - KEPT_BALANCE,
         {"from": account},
     )
     tx.wait(1)
@@ -63,5 +63,4 @@ def add_allowed_tokens(token_farm, dict_of_allowed_tokens, account):
 
 
 def main():
-    dapp_token = deploy_dapp_token()
-    token_farm, dapp_token = deploy_token_farm(dapp_token)
+    token_farm, dapp_token = deploy_token_farm_and_dapp_token()
