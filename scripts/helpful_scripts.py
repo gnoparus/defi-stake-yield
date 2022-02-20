@@ -9,12 +9,23 @@ from brownie import (
     MockWETH,
     DappToken,
     VRFCoordinatorMock,
+    MockV3Aggregator,
 )
 from web3 import Web3
 
 
-FORKED_LOCAL_ENVIRONMENTS = ["mainnet-fork", "mainnet-fork-dev"]
-LOCAL_BLOCKCHAIN_ENVIRONMENTS = ["development", "ganache-local"]
+NON_FORKED_LOCAL_BLOCKCHAIN_ENVIRONMENTS = [
+    "development",
+    "ganache-local",
+    "hardhat",
+    "ganache",
+]
+LOCAL_BLOCKCHAIN_ENVIRONMENTS = NON_FORKED_LOCAL_BLOCKCHAIN_ENVIRONMENTS + [
+    "mainnet-fork",
+    "mainnet-fork-dev",
+    "binance-fork",
+    "matic-fork",
+]
 
 DECIMALS = 8
 INITIAL_VALUE = 3200 * 10**DECIMALS
@@ -27,10 +38,7 @@ def get_account(index=None, id=None):
     if id:
         return accounts.load(id)
 
-    if (
-        network.show_active() in LOCAL_BLOCKCHAIN_ENVIRONMENTS
-        or network.show_active() in FORKED_LOCAL_ENVIRONMENTS
-    ):
+    if network.show_active() in LOCAL_BLOCKCHAIN_ENVIRONMENTS:
         # use generaged fake account
         return accounts[0]
 
@@ -42,7 +50,10 @@ contract_to_mock = {
     "vrf_coordinator": VRFCoordinatorMock,
     "link_token": LinkToken,
     "weth_token": MockWETH,
-    "dai_token": MockDAI,
+    "fau_token": MockDAI,
+    "dai_usd_price_feed": MockV3Aggregator,
+    "eth_usd_price_feed": MockV3Aggregator,
+    "dapp_usd_price_feed": MockV3Aggregator,
 }
 
 
@@ -68,9 +79,22 @@ def deploy_mocks(decimals=DECIMALS, initial_value=INITIAL_VALUE):
     account = get_account()
 
     link_token = LinkToken.deploy({"from": account})
+    print(f"Deployed LinkToken to {link_token.address}")
     vrf_coordinator = VRFCoordinatorMock.deploy(link_token.address, {"from": account})
+    print(f"Deployed VRFCoordinatorMock to {vrf_coordinator.address}")
     dai_token = MockDAI.deploy({"from": account})
+    print(f"Deployed MockDAI to {dai_token.address}")
     weth_token = MockWETH.deploy({"from": account})
+    print(f"Deployed MockWETH to {weth_token.address}")
+
+    eth_usd_pricefeed = MockV3Aggregator.deploy(8, 32000 * 10**10, {"from": account})
+    print(f"Deployed MockV3Aggregator eth_usd_pricefeed to {eth_usd_pricefeed.address}")
+    dai_usd_pricefeed = MockV3Aggregator.deploy(8, 1 * 10**10, {"from": account})
+    print(f"Deployed MockV3Aggregator dai_usd_pricefeed to {dai_usd_pricefeed.address}")
+    dapp_usd_pricefeed = MockV3Aggregator.deploy(8, 1 * 10**10, {"from": account})
+    print(
+        f"Deployed MockV3Aggregator dapp_usd_pricefeed to {dapp_usd_pricefeed.address}"
+    )
 
     print("Deployed mocks!")
 
