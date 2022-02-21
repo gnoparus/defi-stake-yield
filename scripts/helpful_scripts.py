@@ -29,7 +29,7 @@ LOCAL_BLOCKCHAIN_ENVIRONMENTS = NON_FORKED_LOCAL_BLOCKCHAIN_ENVIRONMENTS + [
 ]
 
 DECIMALS = 8
-INITIAL_VALUE = 3200 * 10**DECIMALS
+INITIAL_PRICE_FEED_VALUE = 3200 * 10**DECIMALS
 
 
 def get_account(index=None, id=None):
@@ -74,7 +74,7 @@ def get_contract(contract_name):
     return contract
 
 
-def deploy_mocks(decimals=DECIMALS, initial_value=INITIAL_VALUE):
+def deploy_mocks(decimals=DECIMALS, initial_price_feed_value=INITIAL_PRICE_FEED_VALUE):
     print(f"The active network is {network.show_active()}")
     print(f"Deploying mocks...")
     account = get_account()
@@ -91,9 +91,11 @@ def deploy_mocks(decimals=DECIMALS, initial_value=INITIAL_VALUE):
     oracle = MockOracle.deploy(link_token.address, {"from": account})
     print(f"Deployed MockOracle to {oracle.address}")
 
-    eth_usd_pricefeed = MockV3Aggregator.deploy(8, 32000 * 10**10, {"from": account})
+    eth_usd_pricefeed = MockV3Aggregator.deploy(
+        8, initial_price_feed_value, {"from": account}
+    )
     print(f"Deployed MockV3Aggregator eth_usd_pricefeed to {eth_usd_pricefeed.address}")
-    dai_usd_pricefeed = MockV3Aggregator.deploy(8, 1 * 10**10, {"from": account})
+    dai_usd_pricefeed = MockV3Aggregator.deploy(8, 1 * 10**8, {"from": account})
     print(f"Deployed MockV3Aggregator dai_usd_pricefeed to {dai_usd_pricefeed.address}")
 
     print("Deployed all mocks already!")
