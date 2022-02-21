@@ -7,7 +7,7 @@ from scripts.helpful_scripts import (
 from brownie import DappToken, TokenFarm, network, config
 from web3 import Web3
 
-KEPT_BALANCE = Web3.toWei(1000, "ether")
+KEPT_BALANCE = Web3.toWei(10, "ether")
 
 
 def deploy_dapp_token():
@@ -27,6 +27,8 @@ def deploy_token_farm_and_dapp_token():
         {"from": account},
         publish_source=config["networks"][network.show_active()]["verify"],
     )
+    print(f"Deployed dapp_token")
+    print(f"dapp_token totalSupply = {dapp_token.totalSupply():28.0f}")
 
     ### Transfer most of token to token_farm
     tx = dapp_token.transfer(
@@ -35,6 +37,9 @@ def deploy_token_farm_and_dapp_token():
         {"from": account},
     )
     tx.wait(1)
+    print(f"Transfer most of coin to token_farm")
+    print(f"token_farm balance     = {dapp_token.balanceOf(token_farm.address):28.0f}")
+    print(f"dapp_token totalSupply = {dapp_token.totalSupply():28.0f}")
 
     ## dapp_token, weth_token, fau_token/dai
     weth_token = get_contract("weth_token")
