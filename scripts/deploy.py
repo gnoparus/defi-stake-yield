@@ -6,6 +6,8 @@ from scripts.helpful_scripts import (
 )
 from brownie import DappToken, TokenFarm, network, config
 from web3 import Web3
+import yaml
+import json
 
 KEPT_BALANCE = Web3.toWei(10, "ether")
 
@@ -19,7 +21,7 @@ def deploy_dapp_token():
     return dapp_token
 
 
-def deploy_token_farm_and_dapp_token():
+def deploy_token_farm_and_dapp_token(front_end_update=False):
     account = get_account()
     dapp_token = deploy_dapp_token()
     token_farm = TokenFarm.deploy(
@@ -55,6 +57,9 @@ def deploy_token_farm_and_dapp_token():
         dict_of_allowed_tokens=dict_of_allowed_token,
         account=account,
     )
+    if front_end_update:
+        update_front_end()
+
     return token_farm, dapp_token
 
 
@@ -67,5 +72,13 @@ def add_allowed_tokens(token_farm, dict_of_allowed_tokens, account):
     return token_farm
 
 
+def update_front_end():
+    with open("brownie-config.yaml", "r") as brownie_config:
+        config_dict = yaml.load(brownie_config, Loader=yaml.FullLoader)
+        with open("./front_end/src/brownie-config.json", "w") as brownie_config_json:
+            json.dump(config_dict, brownie_config_json)
+    print(f"Frontend brownie-config.json updated")
+
+
 def main():
-    token_farm, dapp_token = deploy_token_farm_and_dapp_token()
+    token_farm, dapp_token = deploy_token_farm_and_dapp_token(front_end_update=True)
