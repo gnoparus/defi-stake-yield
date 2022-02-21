@@ -4,3 +4,8 @@ __pycache__
 .hypothesis/
 build/
 reports/
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
