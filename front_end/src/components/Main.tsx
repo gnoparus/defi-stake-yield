@@ -1,12 +1,20 @@
 import { useEthers } from "@usedapp/core"
 import helperConfig from "../helper-config.json"
+import networkMapping from "../chain-info/deployments/map.json"
+import { constants } from "ethers";
 
 export const Main = () => {
 
-    var { chainId } = useEthers();
+    var { chainId, error } = useEthers();
+
     // const networkName = chainId ? helperConfig[chainId] : "dev"
     const networkName: string = chainId ? JSON.parse(JSON.stringify(helperConfig))[chainId] : "dev";
-    // const dappTokenAddress;
+
+    console.log("chainId = ", chainId)
+    console.log("networkName = ", networkName)
+
+    const dappTokenAddress = chainId ? JSON.parse(JSON.stringify(networkMapping))[chainId]["DappToken"][0] : constants.AddressZero
+    console.log("dappTokenAddress = ", dappTokenAddress)
 
     return (<div>Hi from Main!</div>)
 }
