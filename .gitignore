@@ -9,3 +9,5 @@ reports/
 /node_modules
 /.pnp
 .pnp.js
+
+chain-info/
