@@ -6,6 +6,7 @@ import brownieConfig from "../brownie-config.json"
 import dapp from "../dapp.png"
 import eth from "../eth.png"
 import dai from "../dai.png"
+import { YourWallet } from "./yourWallet";
 
 export type Token = {
     image: string,
@@ -32,7 +33,7 @@ export const Main = () => {
     const fauTokenAddress = chainId ? JSON.parse(JSON.stringify(brownieConfig))["networks"][networkName]["fau_token"] : constants.AddressZero
     console.log("fauTokenAddress = ", fauTokenAddress)
 
-    const supportedToken: Array<Token> = [
+    const supportedTokens: Array<Token> = [
         {
             image: dapp,
             address: dappTokenAddress,
@@ -50,5 +51,5 @@ export const Main = () => {
         },
     ]
 
-    return (<div>Hi from Main!</div>)
+    return (<YourWallet supportedTokens={supportedTokens} />)
 }
