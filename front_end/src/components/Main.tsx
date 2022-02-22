@@ -3,6 +3,15 @@ import helperConfig from "../helper-config.json"
 import networkMapping from "../chain-info/deployments/map.json"
 import { constants } from "ethers";
 import brownieConfig from "../brownie-config.json"
+import dapp from "../dapp.png"
+import eth from "../eth.png"
+import dai from "../dai.png"
+
+export type Token = {
+    image: string,
+    address: string,
+    name: string,
+}
 
 export const Main = () => {
 
@@ -22,6 +31,24 @@ export const Main = () => {
 
     const fauTokenAddress = chainId ? JSON.parse(JSON.stringify(brownieConfig))["networks"][networkName]["fau_token"] : constants.AddressZero
     console.log("fauTokenAddress = ", fauTokenAddress)
+
+    const supportedToken: Array<Token> = [
+        {
+            image: dapp,
+            address: dappTokenAddress,
+            name: "DAPP"
+        },
+        {
+            image: eth,
+            address: wethTokenAddress,
+            name: "WETH"
+        },
+        {
+            image: dai,
+            address: fauTokenAddress,
+            name: "DAI"
+        },
+    ]
 
     return (<div>Hi from Main!</div>)
 }
