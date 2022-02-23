@@ -3,6 +3,8 @@ import { Token } from "../Main"
 import { useEthers, useTokenBalance } from "@usedapp/core"
 import { formatUnits } from "@ethersproject/units"
 import { Button, Input } from "@mui/material"
+import { useStakeTokens } from "../../hooks/useStakeTokens"
+import { utils } from "ethers"
 
 export interface StakeFormProps {
     token: Token
@@ -23,9 +25,16 @@ export const StakeForm = ({ token }: StakeFormProps) => {
 
     }
 
+    const { approve, approveErc20State } = useStakeTokens(tokenAddress)
+
+    const handleStakeSubmit = () => {
+        const amountAsWei = utils.parseEther(amount.toString())
+        return approve(amountAsWei.toString())
+    }
+
     return (<div>
         <Input onChange={handleInputChanged} />
-        <Button color="primary" size="large">
+        <Button onClick={handleStakeSubmit} color="primary" size="large">
             Stake!!!!
         </Button>
     </div>)
