@@ -1,7 +1,6 @@
 
 
 interface BalanceMsgProps {
-
     label: string
     amount: number
     tokenImgSrc: string
